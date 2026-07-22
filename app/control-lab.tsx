@@ -1,7 +1,7 @@
 "use client";
 
 import { Pause, Play, RotateCcw } from "lucide-react";
-import { CSSProperties, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const tools = ["Grip", "Place", "Make"] as const;
 type Tool = (typeof tools)[number];
@@ -25,21 +25,6 @@ export function ControlLab() {
     return () => preference.removeEventListener("change", sync);
   }, []);
 
-  useEffect(() => {
-    if (!playing || reducedMotion) return;
-    let animationFrame = 0;
-    const started = performance.now();
-    const animate = (time: number) => {
-      const phase = (time - started) / 1200;
-      setShoulder(-24 + Math.sin(phase) * 18);
-      setElbow(38 + Math.sin(phase * 1.25 + 0.7) * 25);
-      setWrist(-10 + Math.sin(phase * 1.7 + 1.4) * 22);
-      animationFrame = window.requestAnimationFrame(animate);
-    };
-    animationFrame = window.requestAnimationFrame(animate);
-    return () => window.cancelAnimationFrame(animationFrame);
-  }, [playing, reducedMotion]);
-
   function reset() {
     setPlaying(false);
     setShoulder(-28);
@@ -47,12 +32,6 @@ export function ControlLab() {
     setWrist(-18);
     setTool("Grip");
   }
-
-  const armStyle = {
-    "--shoulder-angle": `${shoulder}deg`,
-    "--elbow-angle": `${elbow}deg`,
-    "--wrist-angle": `${wrist}deg`,
-  } as CSSProperties;
 
   return (
     <section className="control-lab-section" aria-labelledby="control-lab-title">
@@ -62,7 +41,7 @@ export function ControlLab() {
         <p>Explore how visible intent could make robotic motion easier to understand.</p>
       </div>
 
-      <div className="control-lab-shell" data-reveal>
+      <div className="control-lab-shell" data-playing={playing} data-reveal>
         <div className="lab-viewport">
           <div className="lab-status">
             <span>Concept simulation</span>
@@ -70,13 +49,13 @@ export function ControlLab() {
           </div>
 
           <div className="lab-orbits" aria-hidden="true"><i /><i /><i /></div>
-          <div className="lab-arm" style={armStyle} aria-hidden="true">
+          <div className="lab-arm" aria-hidden="true">
             <span className="lab-base" />
-            <div className="lab-link lab-link-one">
+            <div className="lab-link lab-link-one" style={{ transform: `rotate(${shoulder}deg)` }}>
               <i className="lab-joint" />
-              <div className="lab-link lab-link-two">
+              <div className="lab-link lab-link-two" style={{ transform: `rotate(${elbow}deg)` }}>
                 <i className="lab-joint" />
-                <div className="lab-link lab-link-three">
+                <div className="lab-link lab-link-three" style={{ transform: `rotate(${wrist}deg)` }}>
                   <i className="lab-joint" />
                   <span className="lab-tool" data-tool={tool.toLowerCase()} />
                 </div>
@@ -85,9 +64,9 @@ export function ControlLab() {
           </div>
 
           <div className="lab-readout" aria-hidden="true">
-            <span>SHOULDER <b>{Math.round(shoulder)}°</b></span>
-            <span>ELBOW <b>{Math.round(elbow)}°</b></span>
-            <span>WRIST <b>{Math.round(wrist)}°</b></span>
+            <span>SHOULDER <b>{playing ? "LIVE" : `${Math.round(shoulder)}°`}</b></span>
+            <span>ELBOW <b>{playing ? "LIVE" : `${Math.round(elbow)}°`}</b></span>
+            <span>WRIST <b>{playing ? "LIVE" : `${Math.round(wrist)}°`}</b></span>
           </div>
         </div>
 

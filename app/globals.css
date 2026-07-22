@@ -909,23 +909,51 @@ img {
   box-shadow: inset 0 0 0 1px var(--line-strong), 0 15px 34px color-mix(in srgb, var(--text) 13%, transparent);
   transform-origin: 50% 100%;
   transition: transform 110ms linear;
+  will-change: transform;
 }
 
 .lab-link-one {
   height: 210px;
-  transform: rotate(var(--shoulder-angle));
 }
 
 .lab-link-two {
   bottom: calc(100% - 14px);
   height: 176px;
-  transform: rotate(var(--elbow-angle));
 }
 
 .lab-link-three {
   bottom: calc(100% - 14px);
   height: 104px;
-  transform: rotate(var(--wrist-angle));
+}
+
+@keyframes lab-shoulder-preview {
+  0% { transform: rotate(-42deg); }
+  50% { transform: rotate(-10deg); }
+  100% { transform: rotate(-30deg); }
+}
+
+@keyframes lab-elbow-preview {
+  0% { transform: rotate(24deg); }
+  50% { transform: rotate(70deg); }
+  100% { transform: rotate(44deg); }
+}
+
+@keyframes lab-wrist-preview {
+  0% { transform: rotate(-28deg); }
+  50% { transform: rotate(26deg); }
+  100% { transform: rotate(-8deg); }
+}
+
+.control-lab-shell[data-playing="true"] .lab-link-one {
+  animation: lab-shoulder-preview 3.2s var(--ease-in-out) infinite;
+}
+
+.control-lab-shell[data-playing="true"] .lab-link-two {
+  animation: lab-elbow-preview 2.7s var(--ease-in-out) infinite;
+}
+
+.control-lab-shell[data-playing="true"] .lab-link-three {
+  animation: lab-wrist-preview 2.2s var(--ease-in-out) infinite;
 }
 
 .lab-joint {
@@ -2364,6 +2392,7 @@ img {
 
   .lab-link,
   .lab-tool {
+    animation: none !important;
     transition: none;
   }
 }
