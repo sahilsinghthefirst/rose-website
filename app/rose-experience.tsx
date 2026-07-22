@@ -139,6 +139,27 @@ export function RoseExperience() {
             invalidateOnRefresh: true,
           },
         });
+
+        const precision = page.current?.querySelector<HTMLElement>(".precision-chapter");
+        const precisionImage = precision?.querySelector<HTMLElement>(".precision-media img");
+        const precisionScan = precision?.querySelector<HTMLElement>(".precision-scan");
+        const precisionFrame = precision?.querySelector<HTMLElement>(".precision-frame");
+        const precisionItems = precision?.querySelectorAll<HTMLElement>(".axis-item");
+        if (precision && precisionImage && precisionScan && precisionFrame && precisionItems?.length) {
+          const precisionTimeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: precision,
+              start: "top top",
+              end: "bottom bottom",
+              scrub: 0.8,
+            },
+          });
+          precisionTimeline
+            .fromTo(precisionImage, { scale: 1.16, rotate: -1.8 }, { scale: 1, rotate: 0, ease: "none" }, 0)
+            .fromTo(precisionFrame, { clipPath: "inset(16% 17% 16% 17%)" }, { clipPath: "inset(0% 0% 0% 0%)", ease: "none" }, 0)
+            .fromTo(precisionScan, { yPercent: -220 }, { yPercent: 430, ease: "none" }, 0)
+            .fromTo(precisionItems, { opacity: 0.18, x: 32 }, { opacity: 1, x: 0, stagger: 0.12, ease: "power3.out" }, 0.2);
+        }
       });
 
       if (!reduce) {
@@ -320,6 +341,32 @@ export function RoseExperience() {
                 <p>ROSE is being explored as a platform that can adapt as the product takes shape.</p>
               </div>
             </article>
+          </div>
+        </section>
+
+        <section className="precision-chapter" aria-label="ROSE kinematic precision concept">
+          <div className="precision-sticky">
+            <div className="precision-frame" aria-hidden="true">
+              <span className="precision-word">PRECISION</span>
+              <div className="precision-media">
+                <img src="/concepts/robotic-arm-placeholder.png" alt="" />
+                <span className="precision-scan" />
+                <span className="precision-cross precision-cross-a" />
+                <span className="precision-cross precision-cross-b" />
+                <span className="precision-cross precision-cross-c" />
+              </div>
+            </div>
+            <div className="precision-copy">
+              <span className="section-kicker">Kinetic precision concept</span>
+              <h2>Every axis has a reason.</h2>
+              <p>ROSE is being shaped around motion that can be inspected, previewed, and understood before it becomes physical.</p>
+              <small>Concept visualization. Axis behavior and limits remain unconfirmed.</small>
+            </div>
+            <div className="axis-ledger" aria-label="Concept architecture layers">
+              <div className="axis-item"><span>Structure</span><strong>Readable joints</strong><small>Mechanical concept</small></div>
+              <div className="axis-item"><span>Intent</span><strong>Visible paths</strong><small>Interaction concept</small></div>
+              <div className="axis-item"><span>State</span><strong>Observable motion</strong><small>Software concept</small></div>
+            </div>
           </div>
         </section>
 

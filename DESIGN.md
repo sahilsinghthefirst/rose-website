@@ -5,6 +5,8 @@ description: A cold-luxury product system for an articulated robotic arm.
 
 # Design System: ROSE Robotics
 
+**Branch expression:** Kinetic Precision. This version adds an inspection-led product chapter with a scroll-driven scan plane, axis ledger, and expanding product frame while preserving the Kinematic Gallery foundation.
+
 ## Overview
 
 **Creative North Star: "The Kinematic Gallery"**
