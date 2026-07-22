@@ -10,6 +10,8 @@
   --line-strong: rgba(17, 18, 21, 0.22);
   --accent: #d94b68;
   --accent-deep: #bd3654;
+  --action: #b82f50;
+  --action-hover: #a82545;
   --accent-soft: #f5dfe4;
   --chrome: #c8cdd2;
   --code-bg: #17181b;
@@ -32,6 +34,8 @@
   --line-strong: rgba(242, 243, 241, 0.24);
   --accent: #df5873;
   --accent-deep: #eb7890;
+  --action: #be3455;
+  --action-hover: #a82545;
   --accent-soft: #38222a;
   --chrome: #686c72;
   --code-bg: #090a0c;
@@ -269,7 +273,7 @@ img {
   gap: 10px;
   border: 0;
   border-radius: 999px;
-  background: var(--accent);
+  background: var(--action);
   color: #fff8fa;
   font-weight: 680;
   white-space: nowrap;
@@ -1102,7 +1106,7 @@ img {
   margin-top: auto;
   border: 0;
   border-radius: 999px;
-  background: var(--accent);
+  background: var(--action);
   color: #fff8fa;
   font-weight: 650;
   cursor: pointer;
@@ -1120,7 +1124,7 @@ img {
 @media (hover: hover) and (pointer: fine) {
   .lab-control-heading button:hover,
   .tool-options button:hover { border-color: var(--line-strong); color: var(--text); }
-  .lab-preview-button:hover { background: var(--accent-deep); }
+  .lab-preview-button:hover { background: var(--action-hover); }
 }
 
 .detail-track {
@@ -1868,7 +1872,7 @@ img {
   .header-cta:hover,
   .primary-button:hover,
   .waitlist-form button:hover {
-    background: var(--accent-deep);
+    background: var(--action-hover);
     transform: translateY(-2px);
     box-shadow: 0 14px 34px color-mix(in srgb, var(--accent) 28%, transparent);
   }

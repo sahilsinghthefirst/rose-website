@@ -93,7 +93,15 @@ export function ControlLab() {
             <legend>Tool direction</legend>
             <div className="tool-options">
               {tools.map((item) => (
-                <button key={item} type="button" data-active={tool === item} onClick={() => setTool(item)}>{item}</button>
+                <button
+                  key={item}
+                  type="button"
+                  data-active={tool === item}
+                  aria-pressed={tool === item}
+                  onClick={() => setTool(item)}
+                >
+                  {item}
+                </button>
               ))}
             </div>
           </fieldset>
