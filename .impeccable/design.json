@@ -38,6 +38,7 @@
     "themeDuration": "220ms",
     "revealDuration": "820ms",
     "storyLength": "400dvh",
+    "systemStudy": "three full-viewport horizontal panels on desktop, vertical flow on compact and reduced-motion modes",
     "reducedMotion": "static product composition with no smooth scroll, scroll reveal, pointer parallax, articulation, or camera travel"
   },
   "breakpoints": {
@@ -48,6 +49,8 @@
   "components": {
     "primaryButton": "signal rose pill, near-white text, directional icon, 46px minimum height",
     "floatingNavigation": "inset translucent semantic surface with centered section links",
+    "kinematicReadout": "phase-aware model label, articulation callouts, and compact four-state rail",
+    "systemStudyRail": "joint, tooling, and control-loop panels pinned into a reversible horizontal sequence",
     "contentSurface": "14px semantic card with one-pixel border and layout-specific composition",
     "waitlistForm": "persistent label, email field, primary action, live status, local-only disclosure"
   },

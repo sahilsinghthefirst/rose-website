@@ -211,6 +211,20 @@ function Scene(props: RobotStageProps) {
       <directionalLight position={[5, 8, 7]} intensity={props.dark ? 4.2 : 3.5} color="#fff8f5" castShadow />
       <directionalLight position={[-5, 2, 5]} intensity={props.dark ? 2.4 : 1.45} color="#e8edf2" />
       <pointLight position={[0, -1, 4]} intensity={1.1} color={rose} />
+      <group position={[0, -2.28, -0.18]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh>
+          <ringGeometry args={[2.55, 2.58, 128]} />
+          <meshBasicMaterial color={rose} transparent opacity={0.26} />
+        </mesh>
+        <mesh>
+          <ringGeometry args={[3.34, 3.355, 128]} />
+          <meshBasicMaterial color={props.dark ? "#686c72" : "#aeb4ba"} transparent opacity={0.34} />
+        </mesh>
+        <mesh>
+          <circleGeometry args={[4.4, 128]} />
+          <meshBasicMaterial color={props.dark ? "#16171a" : "#f4f5f2"} transparent opacity={0.38} />
+        </mesh>
+      </group>
       <RobotArm {...props} />
       <ContactShadows
         position={[0, -2.32, 0]}
@@ -230,7 +244,7 @@ export function RobotStage(props: RobotStageProps) {
     <Canvas
       className="robot-canvas"
       dpr={[1, 1.5]}
-      frameloop={props.active ? "always" : "never"}
+      frameloop={props.reducedMotion ? "demand" : props.active ? "always" : "never"}
       camera={{ position: [0, 0.18, 8.5], fov: 34, near: 0.1, far: 100 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       shadows

@@ -33,27 +33,48 @@ const navItems = [
 export function RoseExperience() {
   const page = useRef<HTMLDivElement>(null);
   const story = useRef<HTMLElement>(null);
+  const detailRail = useRef<HTMLElement>(null);
+  const detailTrack = useRef<HTMLDivElement>(null);
+  const pageProgress = useRef<HTMLElement>(null);
   const progress = useRef(0);
+  const phase = useRef(0);
   const pointer = useRef({ x: 0, y: 0 });
   const [dark, setDark] = useState(false);
+  const [themeReady, setThemeReady] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [storyVisible, setStoryVisible] = useState(true);
+  const [storyPhase, setStoryPhase] = useState(0);
   const [formStatus, setFormStatus] = useState<FormStatus>("idle");
   const [formMessage, setFormMessage] = useState("");
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
-    const stored = window.localStorage.getItem("rose-theme");
+    let stored: string | null = null;
+    try {
+      stored = window.localStorage.getItem("rose-theme");
+    } catch {
+      stored = null;
+    }
     const useDark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
     setDark(useDark);
+    setThemeReady(true);
     document.documentElement.dataset.theme = useDark ? "dark" : "light";
-    setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncMotionPreference = () => setReducedMotion(motionPreference.matches);
+    syncMotionPreference();
+    motionPreference.addEventListener("change", syncMotionPreference);
+    return () => motionPreference.removeEventListener("change", syncMotionPreference);
   }, []);
 
   useEffect(() => {
+    if (!themeReady) return;
     document.documentElement.dataset.theme = dark ? "dark" : "light";
-    window.localStorage.setItem("rose-theme", dark ? "dark" : "light");
-  }, [dark]);
+    try {
+      window.localStorage.setItem("rose-theme", dark ? "dark" : "light");
+    } catch {
+      // Theme still applies for the current visit when browser storage is unavailable.
+    }
+  }, [dark, themeReady]);
 
   useEffect(() => {
     if (!story.current) return;
@@ -68,8 +89,7 @@ export function RoseExperience() {
   useEffect(() => {
     if (!page.current || !story.current) return;
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setReducedMotion(reduce);
+    const reduce = reducedMotion;
     const lenis = reduce ? null : new Lenis({ duration: 1.05, smoothWheel: true, wheelMultiplier: 0.88 });
     const tick = (time: number) => lenis?.raf(time * 1000);
     lenis?.on("scroll", ScrollTrigger.update);
@@ -78,14 +98,47 @@ export function RoseExperience() {
       gsap.ticker.lagSmoothing(0);
     }
 
+    const media = gsap.matchMedia();
     const context = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: page.current,
+        start: "top top",
+        end: "bottom bottom",
+        onUpdate: (self) => {
+          if (pageProgress.current) gsap.set(pageProgress.current, { scaleX: self.progress });
+        },
+      });
+
       ScrollTrigger.create({
         trigger: story.current,
         start: "top top",
         end: "bottom bottom",
         onUpdate: (self) => {
           progress.current = reduce ? 0 : self.progress;
+          const nextPhase = Math.min(3, Math.floor(self.progress * 4));
+          if (nextPhase !== phase.current) {
+            phase.current = nextPhase;
+            setStoryPhase(nextPhase);
+          }
         },
+      });
+
+      media.add("(min-width: 901px) and (prefers-reduced-motion: no-preference)", () => {
+        if (!detailRail.current || !detailTrack.current) return;
+        const distance = () => Math.max(0, detailTrack.current!.scrollWidth - window.innerWidth);
+        gsap.to(detailTrack.current, {
+          x: () => -distance(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: detailRail.current,
+            start: "top top",
+            end: () => `+=${distance()}`,
+            pin: true,
+            scrub: 0.9,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
       });
 
       if (!reduce) {
@@ -108,13 +161,14 @@ export function RoseExperience() {
 
     ScrollTrigger.refresh();
     return () => {
+      media.revert();
       context.revert();
       if (lenis) {
         gsap.ticker.remove(tick);
         lenis.destroy();
       }
     };
-  }, []);
+  }, [reducedMotion]);
 
   function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
     pointer.current.x = event.clientX / window.innerWidth - 0.5;
@@ -140,9 +194,14 @@ export function RoseExperience() {
     setFormStatus("loading");
     setFormMessage("Saving your place on this device.");
     window.setTimeout(() => {
-      window.localStorage.setItem("rose-waitlist-email", email);
-      setFormStatus("success");
-      setFormMessage("Saved. Connect a production email service before launch.");
+      try {
+        window.localStorage.setItem("rose-waitlist-email", email);
+        setFormStatus("success");
+        setFormMessage("Saved. Connect a production email service before launch.");
+      } catch {
+        setFormStatus("error");
+        setFormMessage("This browser blocked local saving. Try again after enabling site storage.");
+      }
     }, 650);
   }
 
@@ -151,6 +210,7 @@ export function RoseExperience() {
       <a className="skip-link" href="#main-content">Skip to content</a>
 
       <header className="site-header" aria-label="Primary navigation">
+        <span className="page-progress" aria-hidden="true"><i ref={pageProgress} /></span>
         <a className="brand" href="#robot" onClick={closeMenu} aria-label="ROSE home">
           <span className="brand-mark" aria-hidden="true"><i /><b /></span>
           <span>ROSE</span>
@@ -200,7 +260,8 @@ export function RoseExperience() {
 
       <main id="main-content">
         <section ref={story} id="robot" className="robot-story" aria-label="ROSE robotic arm concept">
-          <div className="robot-stage" aria-hidden="true">
+          <div className="robot-stage" data-phase={storyPhase} aria-hidden="true">
+            <span className="stage-wordmark">ROSE</span>
             <RobotStage
               active={storyVisible}
               dark={dark}
@@ -210,6 +271,17 @@ export function RoseExperience() {
             />
             <div className="orbit orbit-one" />
             <div className="orbit orbit-two" />
+            <div className="kinematic-readout">
+              <span>ROSE / CONCEPT MODEL</span>
+              <strong>{["FULL FORM", "ARTICULATION", "JOINT STUDY", "SYSTEM VIEW"][storyPhase]}</strong>
+              <i><b /></i>
+              <small>{["Assembly", "Motion path", "Modular axis", "Platform direction"][storyPhase]}</small>
+            </div>
+            <div className="joint-marker marker-shoulder"><i /><span>Shoulder axis</span></div>
+            <div className="joint-marker marker-wrist"><i /><span>Wrist interface</span></div>
+            <div className="phase-rail" aria-hidden="true">
+              {[0, 1, 2, 3].map((item) => <i key={item} data-active={item <= storyPhase} />)}
+            </div>
             <div className="stage-scrim" />
             <p className="concept-disclosure">Procedural concept model. Final hardware may differ.</p>
           </div>
@@ -289,6 +361,61 @@ export function RoseExperience() {
             </article>
           </div>
           <p className="placeholder-notice">Capabilities and specifications in this section are concept placeholders.</p>
+        </section>
+
+        <section ref={detailRail} className="detail-rail" aria-label="ROSE system architecture concepts">
+          <div ref={detailTrack} className="detail-track">
+            <article className="detail-panel detail-joint-panel">
+              <div className="detail-copy">
+                <span className="section-kicker">Kinematic architecture</span>
+                <h2>See the machine think in motion.</h2>
+                <p>Joint intent, movement, and limits should be understandable before the arm moves.</p>
+                <small>Interaction model concept. Final behavior remains under development.</small>
+              </div>
+              <div className="joint-study" aria-hidden="true">
+                <span className="study-ring ring-outer" />
+                <span className="study-ring ring-middle" />
+                <span className="study-ring ring-inner" />
+                <span className="study-arm study-arm-one" />
+                <span className="study-arm study-arm-two" />
+                <span className="study-node study-node-a" />
+                <span className="study-node study-node-b" />
+                <b>JOINT PATH / CONCEPT</b>
+              </div>
+            </article>
+
+            <article className="detail-panel detail-tool-panel">
+              <div className="detail-copy">
+                <span className="section-kicker">Tool interface</span>
+                <h2>One wrist. A growing vocabulary.</h2>
+                <p>The product direction supports interchangeable tools without hiding their constraints.</p>
+                <small>Tool shapes and interfaces shown here are placeholders.</small>
+              </div>
+              <div className="tool-study" aria-hidden="true">
+                <div><i /><b /><span>GRIP</span></div>
+                <div><i /><b /><span>PLACE</span></div>
+                <div><i /><b /><span>MAKE</span></div>
+              </div>
+            </article>
+
+            <article className="detail-panel detail-control-panel">
+              <div className="detail-copy">
+                <span className="section-kicker">Control loop</span>
+                <h2>Preview first. Move with intent.</h2>
+                <p>A clear sequence can connect planning, simulation, confirmation, and physical motion.</p>
+                <small>Illustrative software flow. Not production behavior.</small>
+              </div>
+              <div className="control-loop" aria-hidden="true">
+                <div><span>Plan</span><small>Motion recipe</small></div>
+                <i />
+                <div><span>Preview</span><small>Simulation</small></div>
+                <i />
+                <div><span>Confirm</span><small>Human intent</small></div>
+                <i />
+                <div><span>Move</span><small>Robot state</small></div>
+              </div>
+            </article>
+          </div>
         </section>
 
         <section id="applications" className="content-section applications-section">

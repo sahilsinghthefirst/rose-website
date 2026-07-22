@@ -11,7 +11,7 @@ description: A cold-luxury product system for an articulated robotic arm.
 
 ROSE presents industrial robotics with the calm, object-first confidence of a major product launch. The robotic arm is treated as a precise moving sculpture: large in frame, physically lit, and explained through its joints, reach, and modular form rather than surrounded by interface decoration.
 
-The visual world combines cool gallery surfaces, soft chrome, graphite type, and a single controlled rose accent. Layouts remain quiet enough to read immediately, while WebGL depth and authored scroll sequences carry the ambition. The signature is a continuous camera path that moves from complete object to joint architecture to exploded assembly without breaking spatial continuity.
+The visual world combines cool gallery surfaces, soft chrome, graphite type, and a single controlled rose accent. Layouts remain quiet enough to read immediately, while WebGL depth and authored scroll sequences carry the ambition. The signature is a continuous camera path that moves from complete object to joint architecture to exploded assembly without breaking spatial continuity, followed by a horizontal system study that makes the product architecture tangible.
 
 **Key Characteristics:**
 
@@ -19,6 +19,8 @@ The visual world combines cool gallery surfaces, soft chrome, graphite type, and
 - Monumental product scale with restrained typography
 - One rose accent used for actions and active articulation
 - Continuous, reversible spatial motion
+- Sparse kinematic instrumentation that responds to the current story phase
+- Contrasting editorial peaks separated by calm reading passages
 - Honest concept labeling for all unconfirmed material
 
 ## Colors
@@ -94,6 +96,14 @@ Hover motion is a 1 to 2px upward translation over 160 to 180ms using `cubic-bez
 
 Capability, application, specification, code, and waitlist surfaces share the 14px system radius and semantic one-pixel boundaries. Their internal compositions vary deliberately: capability cards use asymmetric spans, application rows read like an editorial index, specifications use grouped definition lists, and the developer surface pairs a dark code field with a light explanatory field.
 
+### Kinematic Readout
+
+The product stage carries one compact instrumentation layer: current spatial chapter, progress line, active articulation labels, and a four-state vertical rail. It is subordinate to the arm and disappears or simplifies on compact screens. The labels describe the object currently in view rather than decorating the hero.
+
+### System Study Rail
+
+Three full-viewport panels explain joint architecture, tool interfaces, and the control loop. Desktop scroll moves the panels horizontally while the section remains pinned. Each panel pairs one large thesis with a distinct explanatory artifact. Mobile and reduced-motion modes use a normal vertical reading order with no pinning.
+
 ### Waitlist Form
 
 The form contains a persistent email label, a rounded text field, a primary action, and a live status message. Error, saving, and success language is explicit. The prototype stores an entry only on the current device and discloses that no production email service is connected.
@@ -101,6 +111,8 @@ The form contains a persistent email label, a rounded text field, a primary acti
 ## Motion
 
 - **Spatial story:** A continuous 400dvh scroll chapter drives arm articulation, camera framing, joint emphasis, and exploded separation through GSAP ScrollTrigger.
+- **System study:** A reversible horizontal sequence connects joint, tooling, and software concepts without changing the navigation or reading order.
+- **Page progress:** A one-pixel rose line inside the navigation shows document progress without adding a separate control.
 - **Pointer parallax:** The arm and camera respond subtly to pointer position without moving interface text.
 - **Section reveals:** One-time opacity, 28px vertical translation, and 7px blur resolve over 820ms with a strong ease-out.
 - **Theme transition:** Page background and foreground colors transition over 220ms.
