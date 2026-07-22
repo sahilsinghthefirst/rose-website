@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ControlLab } from "./control-lab";
 
 const RobotStage = dynamic(() => import("./robot-stage").then((module) => module.RobotStage), {
   ssr: false,
@@ -362,6 +363,8 @@ export function RoseExperience() {
           </div>
           <p className="placeholder-notice">Capabilities and specifications in this section are concept placeholders.</p>
         </section>
+
+        <ControlLab />
 
         <section ref={detailRail} className="detail-rail" aria-label="ROSE system architecture concepts">
           <div ref={detailTrack} className="detail-track">

@@ -2,6 +2,7 @@
   "schemaVersion": 2,
   "name": "ROSE Robotics",
   "creativeNorthStar": "The Kinematic Gallery",
+  "branchExpression": "Interactive Control Lab",
   "colors": {
     "signalRose": "#D94B68",
     "galleryPearl": "#F6F7F5",

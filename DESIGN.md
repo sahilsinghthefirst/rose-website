@@ -5,6 +5,8 @@ description: A cold-luxury product system for an articulated robotic arm.
 
 # Design System: ROSE Robotics
 
+**Branch expression:** Interactive Control Lab. This version adds a truthful motion sandbox with direct joint controls, tool-direction switching, and a user-triggered preview sequence.
+
 ## Overview
 
 **Creative North Star: "The Kinematic Gallery"**
