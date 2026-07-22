@@ -139,6 +139,30 @@ export function RoseExperience() {
             invalidateOnRefresh: true,
           },
         });
+
+        const material = page.current?.querySelector<HTMLElement>(".material-chapter");
+        const materialStage = material?.querySelector<HTMLElement>(".material-stage");
+        const materialImage = material?.querySelector<HTMLElement>(".material-object");
+        const materialVeil = material?.querySelector<HTMLElement>(".material-veil");
+        const materialMoments = material?.querySelectorAll<HTMLElement>(".material-moment");
+        if (material && materialStage && materialImage && materialVeil && materialMoments?.length) {
+          const materialTimeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: material,
+              start: "top top",
+              end: "bottom bottom",
+              scrub: 0.85,
+            },
+          });
+          materialTimeline
+            .fromTo(materialStage, { clipPath: "inset(10% 10% 10% 10% round 28px)" }, { clipPath: "inset(0% 0% 0% 0% round 0px)", ease: "none" }, 0)
+            .fromTo(materialImage, { scale: 1.2, rotate: -3 }, { scale: 0.96, rotate: 1.5, ease: "none" }, 0)
+            .fromTo(materialVeil, { xPercent: -120, rotate: -16 }, { xPercent: 130, rotate: 12, ease: "none" }, 0)
+            .fromTo(materialMoments[0], { opacity: 1, y: 0 }, { opacity: 0, y: -40, ease: "power2.inOut" }, 0.18)
+            .fromTo(materialMoments[1], { opacity: 0, y: 48 }, { opacity: 1, y: 0, ease: "power3.out" }, 0.32)
+            .to(materialMoments[1], { opacity: 0, y: -40, ease: "power2.inOut" }, 0.57)
+            .fromTo(materialMoments[2], { opacity: 0, y: 48 }, { opacity: 1, y: 0, ease: "power3.out" }, 0.67);
+        }
       });
 
       if (!reduce) {
@@ -320,6 +344,37 @@ export function RoseExperience() {
                 <p>ROSE is being explored as a platform that can adapt as the product takes shape.</p>
               </div>
             </article>
+          </div>
+        </section>
+
+        <section className="material-chapter" aria-label="ROSE material and form study">
+          <div className="material-sticky">
+            <div className="material-stage" aria-hidden="true">
+              <span className="material-title">ROSE</span>
+              <span className="material-halo" />
+              <img className="material-object" src="/concepts/robotic-arm-placeholder.png" alt="" />
+              <span className="material-veil" />
+              <span className="material-lens material-lens-a" />
+              <span className="material-lens material-lens-b" />
+            </div>
+            <div className="material-moments">
+              <article className="material-moment">
+                <span>Form study</span>
+                <h2>Precision can feel warm.</h2>
+                <p>Soft pearl housings and quiet chrome make the machine approachable without disguising what it is.</p>
+              </article>
+              <article className="material-moment">
+                <span>Light study</span>
+                <h2>Shape revealed by light.</h2>
+                <p>Controlled highlights clarify every joint, edge, and moving relationship.</p>
+              </article>
+              <article className="material-moment">
+                <span>Surface study</span>
+                <h2>Built to belong in the room.</h2>
+                <p>The final materials remain open. The intent is a capable object with a calm physical presence.</p>
+              </article>
+            </div>
+            <p className="material-disclosure">Material visualization concept. Final finishes and construction may differ.</p>
           </div>
         </section>
 

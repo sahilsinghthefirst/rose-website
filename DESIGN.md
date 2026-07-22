@@ -5,6 +5,8 @@ description: A cold-luxury product system for an articulated robotic arm.
 
 # Design System: ROSE Robotics
 
+**Branch expression:** Cinematic Material. This version turns the product into a sequence of form, light, and surface studies inside one controlled full-viewport material stage.
+
 ## Overview
 
 **Creative North Star: "The Kinematic Gallery"**
